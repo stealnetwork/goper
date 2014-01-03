@@ -6,6 +6,11 @@ import "bytes"
 type MysqlDialect int
 
 func (this MysqlDialect) Name() string { return "mysql" }
+
+func (this MysqlDialect) CurrentDatabaseName() string {
+	return "SELECT DATABASE() AS db_name FROM DUAL"
+}
+
 func (this MysqlDialect) CreateTable(table Table) string {
 	var buf bytes.Buffer
 	fmt.Fprintf(&buf, "CREATE TABLE %s(", table.Name)

@@ -9,6 +9,11 @@ type SqliteDialect struct {
 }
 
 func (this SqliteDialect) Name() string { return "sqlite3" }
+
+func (this SqliteDialect) CurrentDatabaseName() string {
+	return "SELECT 'main' AS db_name"
+}
+
 func (this SqliteDialect) ListTables(dbname string) string {
 	return fmt.Sprintf(`SELECT name as table_name FROM sqlite_master
 WHERE type='table' ORDER BY name`)
