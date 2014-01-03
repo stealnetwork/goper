@@ -19,7 +19,7 @@ Installation
 
     # install the library:
     # install the sqlite development libraries
-    go get github.com/shanemhansen/goger
+    go get github.com/shanemhansen/goper
     
 
 Examples
@@ -29,3 +29,4 @@ Examples
      go install github.com/shanemhansen/goper/...
      schema -driver sqlite3 -dsn path/to/file.sqlite3 > data.go
      schema -driver mysql -dsn "user:password@tcp(127.0.0.1:3306)/main" > data.go
+     schema -driver mysql -dsn "user:password@tcp(127.0.0.1:3306)/" > data.go -schema my_table_name

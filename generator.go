@@ -47,19 +47,31 @@ func (this *SchemaWriter) WriteField(column *Column) {
 // Load the database schema into memory using introspection, populating .Tables
 func (this *SchemaWriter) LoadSchema(driver string, schema string, db *sql.DB) error {
 	dialect := DialectByDriver(driver)
+
+	if schema == "" {
+		db_name := &schema
+		err := db.QueryRow(dialect.CurrentDatabaseName()).Scan(db_name)
+		if err != nil {
+			panic(err)
+		}
+	}
+
 	tables, err := db.Query(dialect.ListTables(schema))
 	if err != nil {
 		return err
 	}
+
 	for tables.Next() {
 		var ignored sql.NullString
 		t := new(Table)
 		tables.Scan(&t.Name)
 		this.Tables = append(this.Tables, t)
 		cols, err := db.Query(dialect.ListColumns(schema, *t))
+
 		if err != nil {
 			return err
 		}
+
 		for cols.Next() {
 			c := new(Column)
 			if strings.EqualFold(dialect.Name(), "sqlite3") {
@@ -68,12 +80,16 @@ func (this *SchemaWriter) LoadSchema(driver string, schema string, db *sql.DB) e
 			} else {
 				err = cols.Scan(&c.Name, &c.DbType)
 			}
+
 			if err != nil {
 				panic(err)
 			}
+
 			t.Columns = append(t.Columns, *c)
 		}
+
 		this.WriteType(t)
 	}
+
 	return nil
 }

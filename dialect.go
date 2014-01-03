@@ -9,6 +9,7 @@ type Dialect interface {
 	ListTables(string) string
 	ListColumns(string, Table) string
 	Name() string
+	CurrentDatabaseName() string
 }
 
 var dialects map[string]Dialect
