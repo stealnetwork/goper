@@ -53,12 +53,12 @@ table_schema = '%s' and table_type = 'BASE TABLE'`, dbname)
 }
 func (this MysqlDialect) ListColumns(dbname string, table Table) string {
 	return fmt.Sprintf(`select column_name, data_type from information_schema.columns
-where table_schema = 'main' and table_name='%s'`, table.Name)
+where table_schema = '%s' and table_name='%s'`, dbname, table.Name)
 }
 func (this MysqlDialect) ListCollections(dbname string, table Table) string {
 	return fmt.Sprintf(`
     SELECT DISTINCT i.TABLE_NAME, k.referenced_table_name, k.column_name, k.referenced_column_name
-    FROM information_schema.TABLE_CONSTRAINTS i 
+    FROM information_schema.TABLE_CONSTRAINTS i
     LEFT JOIN information_schema.KEY_COLUMN_USAGE k
     ON i.CONSTRAINT_NAME = k.CONSTRAINT_NAME
     WHERE i.CONSTRAINT_TYPE = 'FOREIGN KEY'
@@ -69,7 +69,7 @@ func (this MysqlDialect) ListCollections(dbname string, table Table) string {
 func (this MysqlDialect) ListReferences(dbname string, table Table) string {
 	return fmt.Sprintf(`
     SELECT DISTINCT i.TABLE_NAME, k.referenced_table_name, k.column_name, k.referenced_column_name
-    FROM information_schema.TABLE_CONSTRAINTS i 
+    FROM information_schema.TABLE_CONSTRAINTS i
     LEFT JOIN information_schema.KEY_COLUMN_USAGE k
     ON i.CONSTRAINT_NAME = k.CONSTRAINT_NAME
     WHERE i.CONSTRAINT_TYPE = 'FOREIGN KEY'
